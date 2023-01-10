@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta cherset="UTF-8">
+        <title>
+            BIT-INT
+        </title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono:300">
+        
+        <script>
+            // const spinnerWrapperEL = document.querySelector('.spinner-wrapper')
+            setTimeout(() => {
+                const elem = document.getElementById("loader");
+                elem.parentNode.removeChild(elem);
+            }, 1000);
+            
+        </script>
+
+    </head>
+
+    <body>
+        <style>
+            .spinner-wrapper {
+                background-color: #fff;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 9999;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                animation-name: loading;
+                animation-direction: forward;
+                animation-duration: 1s;
+                animation-iteration-count: 1;
+            }
+
+            @keyframes loading {
+                from {
+                    opacity: 1;
+                }
+                to {
+                    opacity: 0;
+                    display: none;
+                }
+            }
+        </style>
+
+        <div class="spinner-wrapper" id="loader">
+            <div class="spinner-border text-primary" style="width: 5em; height: 5em;" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+        <div class="m-3 p-3 fs-3 fw-bold" style="align-items: center;">
+            Address: {{address}}
+        </div>
+
+        {% for key,val in data.items() %}
+        <div style="align-items: center;">
+            <div class="d-flex flex-row w-75 m-3 ">
+                <div>
+                    <a href="https://oxt.me/transaction/{{ key.split(' ')[0] }}" style="text-decoration: none">
+                        <pre class="text-primary p-3 font-weight-bold" style="font-size: larger; font-weight: bold;">{{ key }}</pre>
+                    </a>
+                </div>
+            </div>
+            <div class="d-flex flex-row w-75 m-3 justify-content-center">
+                <div style="overflow-x: scroll; max-height:400px;" class="m-2">
+                    {% for inp in val["input"] %}
+                        {% if inp.split(' : ')[0] == address %}
+                        <div class="text-primary fw-bold" id="focus">{{ inp }}<br/></div>
+                        {% else %}
+                        <div>{{ inp }}<br/></div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div>
+                    <img class="align-self-center m-1" src="{{url_for('static', filename='/image/icons8-right-48.png')}}"/>
+                </div>
+                <div style="overflow-x: scroll; max-height:400px;" class="m-2">
+                    {% for op in val["out"] %}
+                        {% if op.split(' : ')[0] == address %}
+                        <div class="text-primary fw-bold" id="focus">{{ op }}<br/></div>
+                        {% else %}
+                        <div>{{ op }}<br/></div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <hr class="w-75 m-3 border border-3 text-bg-primary"/>
+        {% endfor %}
+    </body>
+</html>

@@ -1,0 +1,51 @@
+{% if res_dict.items() %}
+{% set result=res_dict.items() %}
+<div>
+    <p>Address is : {{ result["address"] }}</p>
+    <p>Transactions are as below</p>
+    <p>{{ result["hash"] }}</p>
+    <p>{{ result["inputs"] }}</p>
+</div>
+
+
+        <!-- <table>
+            {% for hash, values in data.item %}
+            <tr>
+                <td>Hash : {{ hash }}</td>
+            </tr>
+            <tr>
+                {% for inps in data["input"] %}
+                <td>
+                    {{ inps }}
+                </td>
+                {% endfor %}
+                <td class="align-self-center">
+                    <img src="{{url_for('static', filename='/image/icons8-right-48.png')}}"/>
+                </td>
+                {% for outs in data["out"] %}
+                <td>
+                    {{ outs }}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table> -->
+
+
+
+
+style="color: #0d6efd; border-width: 2px;"
+
+
+
+
+        <script>
+            const spinnerWrapperEL = document.querySelector('#loader')
+
+            window.addEventListener('load', () =>{
+
+                setTimeout(() => {
+                    spinnerWrapperEL.style.display = 'none';
+                }, 200);
+            });
+        </script>

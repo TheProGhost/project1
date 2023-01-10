@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta cherset="UTF-8">
+    <title>
+        BIT-INT
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono:300">
+
+    <script>
+        const loadingEl = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+
+        function loadAni(){
+            document.getElementById("trxns").innerHTML = loadingEl;
+
+            setTimeout(() => {
+                document.getElementById("trxns").innerHTML = "Transactions";
+            }, 3500);
+        }
+
+        setTimeout(() => {
+                const elem = document.getElementById("loader");
+                elem.parentNode.removeChild(elem);
+        }, 1000);
+
+    </script>
+
+    <style>
+        body{
+            transition: all 1s;
+        }
+    </style>
+
+</head>
+
+<body>
+    <style>
+        .spinner-wrapper {
+            background-color: #fff;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation-name: loading;
+            animation-direction: forward;
+            animation-duration: 1s;
+            animation-iteration-count: 1;
+        }
+
+        @keyframes loading {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+                display: none;
+            }
+        }
+    </style>
+
+    <div class="spinner-wrapper" id="loader">
+        <div class="spinner-border text-primary" style="width: 5em; height: 5em;" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+    
+    <div class="container text-center gap-3">
+        <form action="/data" method="post">
+            <div class="row">
+                <div class="col">
+                    <div class="form-floating mb-3 mt-3">
+                        <input class="form-control" id="input_address" name="addrs"
+                            placeholder="Enter Bitcoin address" />
+                        <label for="input_address">Bitcoin Address: </label>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button id="submit" class="btn btn-primary px-5" type="submit">Go</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- checking if address is empty -->
+
+    {% if empty %}
+    <div class="font-weight-bold text-center text-danger mt-3 mb-3 py-3" style="font-size: 3em;">
+        <p>Please enter Bitcoin Address </p>
+    </div>
+    {% endif %}
+
+    <!-- validation of address  -->
+
+    {% if improperAddress %}
+    <div class="font-weight-bold text-center text-danger mt-3 mb-3 py-3" style="font-size: 3em;">
+        <p>{{ addrs }}</p>
+        <p>Check Bitcoin Address again and Enter Properly </p>
+    </div>
+    {% endif %}
+
+    <!-- if everything validate -->
+
+    {% if address%}
+    <div class="d-flex m-3">
+        <div class="flex-fill border me-2" style="width:75%">
+
+            <!-- general information -->
+
+            <div align=center>
+                <p class="fw-bold fs-4">General Info:</p>
+                <table class="p-3 m-2" style="font-size: larger;">
+                {% for key,value in gen_info.items() %}
+                    <tr class="p-2">
+                        <td class="text-primary fw-bolder">{{ key }}</td>
+                        <td>&nbsp; : &nbsp;{{ value }}</td>
+                    </tr>
+                {% endfor %}
+                </table>
+            </div>
+
+            <!-- scam alerts table -->
+
+            <div>
+                {% if scams_report == None %}
+                <p class="fw-bold fs-4 m-2">Scam Alerts: None </p>
+                {% else %}
+                    <form action="/scams" method="post">
+                        <p class="fw-bold fs-4 m-2">Scam Alerts: {{ scams_report }}
+                        <button id="scam_show" class="btn btn-primary px-3"> 
+                            Show
+                        </button>
+                    </form>
+                </p>
+                <div id="scam_table">
+                        {{ scams }}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- website Appearences -->
+
+            <div>
+                {% if website_report == None %}
+                <p class="fw-bold fs-4 m-2">Website Appearences: None </p>
+                {% else %}
+                    <form action="/websites" method="post">
+                        <p class="fw-bold fs-4 m-2">Website Appearences: {{ website_report }}
+                        <button id="web_show" class="btn btn-primary px-3"> 
+                            Show 
+                        </button>
+                    </form>
+                </p>
+                <div id="web_table">
+                        {{ websites }}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- showing transaction  -->
+
+            <p> 
+                <form action="/transactions" method="post" class="fw-bold fs-4 m-2">
+                    To view all transactions containing this Address: <button type="submit" id="trxns" class="btn btn-primary" onClick="loadAni()">Transactions</button>
+                </form>
+            </p>
+
+        </div>
+
+        <!-- External links  -->
+
+        <div class="flex-sm-fill font-weight-bold border ps-5" style="height:100%; width:10%; font-size: large;">
+            <p class="text-primary fs-3">External links:</p>
+            <div class="m-2 p-1 fs-4">
+                {% for key,value in external_links.items() %}
+                <p>
+                    <a id="link" href="{{ value }}{{ address }}" style="color: #dc3545;" target="_blank" rel="noopener noreferrer">
+                        {{ key }}
+                    </a>
+                </p>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+    {% endif %}
+</body>
+
+</html>
